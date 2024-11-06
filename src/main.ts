@@ -11,5 +11,5 @@ alertButton.innerHTML = "Click me!";
 app.append(alertButton);
 
 alertButton.addEventListener("click", () => {
-  alert("you make a big click!");
+  alert("you made a big click!");
 });
