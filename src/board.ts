@@ -29,8 +29,8 @@ export class Board {
 
   getCellForPoint(point: leaflet.LatLng): Cell {
     return this.getCanonicalCell({
-      i: Math.floor(point.lat),
-      j: Math.floor(point.lng),
+      i: Math.floor(point.lat / this.tileWidth),
+      j: Math.floor(point.lng / this.tileWidth),
     });
   }
 
@@ -52,17 +52,22 @@ export class Board {
     const resultCells: Cell[] = [];
     const originCell = this.getCellForPoint(point);
 
-    for (let i = 0; i < this.knownCells.size; i++) {
-      for (let j = 0; j < this.knownCells.size; j++) {
-        const tempCell = this.getCanonicalCell({ i, j });
-        const distance = Math.sqrt(
-          Math.pow(tempCell.i - originCell.i, 2) +
-            Math.pow(tempCell.j - originCell.j, 2),
+    for (
+      let x = -this.tileVisibilityRadius;
+      x <= this.tileVisibilityRadius;
+      x++
+    ) {
+      for (
+        let y = -this.tileVisibilityRadius;
+        y <= this.tileVisibilityRadius;
+        y++
+      ) {
+        resultCells.push(
+          this.getCanonicalCell({
+            i: (originCell.i + x),
+            j: (originCell.j + y),
+          }),
         );
-
-        if (distance <= this.tileVisibilityRadius) {
-          resultCells.push(tempCell);
-        }
       }
     }
 
